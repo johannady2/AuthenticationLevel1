@@ -5,14 +5,16 @@ import pg from "pg";
 const app = express();
 const port = 3000;
 
+
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
-  database: "secrets",
-  password: "123456",
+  database: "AuthenticationLevel1",
+  password: "ChibaKing82",
   port: 5432,
 });
 db.connect();
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
