@@ -41,8 +41,16 @@ app.post("/register", async (req, res) =>
 
     try
     {
-      await db.query('INSERT INTO users(email, password) VALUES($1, $2)', [email, password]);
-        res.render("home.ejs");
+
+        if(await checkUserExists(email))
+        {
+          res.send("Email already exists. Try logging in.");  
+        }
+        else
+        {
+        await db.query('INSERT INTO users(email, password) VALUES($1, $2)', [email, password]);
+          res.render("home.ejs");
+        }
     }
     catch (err)
     {
@@ -80,3 +88,14 @@ app.post("/login", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+
+const checkUserExists = async (email) => {
+  try {
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+    return result.rows.length > 0;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
